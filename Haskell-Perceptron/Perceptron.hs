@@ -12,7 +12,7 @@
 module Perceptron ( genWeights,
                     train,
                     l_rate,
-                    threshold) where
+                    threshold ) where
 
 import System.Random (getStdRandom, randomR)
 import Control.Monad (replicateM)
@@ -82,11 +82,14 @@ epoch inputs weights = (updated_weights, err)
 
 {- Simulate the perceptron learning algorithm on
    some data set :: ([inputs], target output). -}
-train :: DataSet -> Weights -> Float -> DataPacket
-train inputs weights epochs
+train :: DataSet -> Weights -> DataPacket
+train inputs weights = train' inputs weights 1
+
+train' :: DataSet -> Weights -> Float -> DataPacket
+train' inputs weights epochs
       -- If the epoch error (delta) is zero, return the results.
     | delta == 0 = (updated_weights, epochs)
       -- If the previous epoch error was not zero, train another epoch.
-    | otherwise = train inputs updated_weights (epochs + 1)
+    | otherwise = train' inputs updated_weights (epochs + 1)
         -- Train the perceptron (1 epoch).
         where (updated_weights, delta) = epoch inputs weights
