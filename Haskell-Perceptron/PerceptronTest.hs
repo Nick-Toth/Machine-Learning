@@ -36,7 +36,7 @@ main = do
   printData raw_data
 
   -- Train the network
-  let output = train cnv_data weights 1
+  let output = train cnv_data weights
 
   -- Display the results of training the network.
   putStrLn $ "\n  Perceptron trained with a dataset of size " ++ show packets
