@@ -57,7 +57,6 @@ main = do
       (0, 1) => 0
       (1, 0) => 1
       (1, 1) => 1
-
 -}
 test_gen :: IO ([Float], Float)
 test_gen = do
@@ -78,13 +77,11 @@ test_gen = do
   return output
 
 
--- Convert a string of binary digits
--- into a list of bits (Float).
+-- Convert a string of binary digits into a list of bits (Float).
 bitVec :: String -> [Float]
 bitVec bitmap = map (\wrd -> read [wrd] :: Float) bitmap
 
--- Convert a list of strings of binary
--- digits into a list of lists bits (Float).
+-- Convert a list of strings of binary digits into a list of lists bits (Float).
 bitVec_fromMtx :: [String] -> [[Float]]
 bitVec_fromMtx bitmap = map (\x -> map ( \y -> (read y :: Float) ) (words x)) ( bitmap)
 
