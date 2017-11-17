@@ -23,8 +23,8 @@ seed = 0 :: Int
 
 main :: IO ()
 main = do
-  test_gen -- Simulate perceptron with binary input data.
-  --test_mnist -- Simulate perceptron with mnist data.
+  --test_gen -- Simulate perceptron with binary input data.
+  test_mnist -- Simulate perceptron with mnist data.
   putStrLn "\n\n  Goodbye!\n"
 
 --(foldl (+) 0 (zipWith (*) [0.0,1.0] [3.2759907e-3,2.4698852e-3])) - threshold
