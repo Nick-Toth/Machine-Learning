@@ -46,7 +46,7 @@ with open("Data.txt") as file:
         # read data line, divide by spaces
         trainingData = file.readline( ).split( )
 
-        if trainingData == [ ]: print "\n\nIteration Complete!"; break # End of file.
+        if trainingData == [ ]: print "\n\nTraining Complete!"; break # End of file.
 
         inputVals = list(map(int, trainingData[:inputs]))    # Parse the inputs
         targetVals = list(map(int, trainingData[-outputs:])) # Parse the target outputs
