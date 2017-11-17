@@ -2,7 +2,7 @@
 \\ File:  TrainingData.hs
 // Name:  Nick G. Toth
 \\ Email: ntoth@pdx.edu
-// Date:  November 12, 2017
+// Date:  November 16, 2017
 \\
 // Overview: Tools for generating / formatting
 \\ data for testing machine learning algorithms.
@@ -10,18 +10,19 @@
 \\ ************************************************ -}
 
 module TrainingData( cnv_a, cnv_b,  -- Convert between Bundle_A and Bundle_B
-                     printData,     -- Display data set.
+                     printBinData,  -- Display data set.
                      genDataBundle, -- Generate a set of binary training data.
-                     scanMNIST      -- Extract a random set of mnist data.
+                     scanMNIST,     -- Extract a random set of mnist data.
+                     bitVec         -- String to [Float]. e.g., "012" => [0.0,1.0,2.0]
                    ) where
 
 import System.Random
 import Data.Functor
+import Data.Int
 
 -- Extract mnist data from .gz files.
 import Codec.Compression.GZip (decompress)
-import qualified Data.ByteString.Lazy as BStr
-
+import qualified Data.ByteString.Lazy as B_Str
 
 
 {-*************** Binary Data Tools ***************-}
@@ -68,8 +69,7 @@ genDataBundle size seed = do
 
 
 -- Display a data set.
---printData :: Bundle_A -> IO ()
-printData training_data = do
+printBinData training_data = do
     let a = map show training_data
     putStrLn "\n  Printing data:\n"
     mapM_ (putStrLn . ("    " ++)) a
@@ -95,34 +95,47 @@ cnv lst f g h = do
                 c <- snd ulst ]
 
 
+
 {-*************** MNIST data ***************-}
 
 
+-- Alias for readability
+type BStr = B_Str.ByteString
+type StrPkt = (String, String) 
+
 -- MNIST file names
-(mnist_imgs, mnist_labs) = ("mnist-images.gz", "mnist-labels.gz")
+(mnist_imgs, mnist_labs) = ("mnist-images.gz", "mnist-labels.gz") :: StrPkt
 
 -- General data dimension specs.
-(dim_sq, dims, dim_rng) = ( 28, 784, [0..27])
+(dim_sq, dims, dim_rng) = ( 28, 784, [0..27]) :: (Int64, Int64, [Int64])
 
 -- Specifications for rendering bitmaps.
+renderSpec :: Integral a => a -> Char
 renderSpec n = specs !! (fromIntegral n * length specs `div` 256)
   where specs = "01" -- Characters to be used in bitmap generation.
 
+
 -- Creates a bitmap for some image using renderSpec.
-bitmap img idx = [ (renderSpec.BStr.index img.(idx * dims + 16 + r * dim_sq +)) <$> dim_rng | r <- dim_rng]
+bitmap :: BStr -> Int64 -> [String]
+bitmap img idx = [ (renderSpec.B_Str.index img.(idx * dims + 16 + r * dim_sq +)) <$> dim_rng | r <- dim_rng ]
+
 
 -- Create a single data packet - (bitmap, label)
-packet img lab idx = (unlines $ bitmap img idx, show (BStr.index lab (idx + 8)))
+packet :: BStr -> BStr -> Int64 -> StrPkt
+packet img lab idx = (unlines $ bitmap img idx, show (B_Str.index lab (idx + 8)))
+
 
 -- Generate a random list of mnist data packets.
+scanMNIST :: (Num t, Eq t) => t -> IO [StrPkt]
 scanMNIST size = do
   -- Extract images and labels.
-  img <- decompress <$> BStr.readFile mnist_imgs
-  lab <- decompress <$> BStr.readFile mnist_labs
+  img <- decompress <$> B_Str.readFile mnist_imgs
+  lab <- decompress <$> B_Str.readFile mnist_labs
   -- Initialize list building
   scanMNIST' (img, lab) size []
 
-
+-- Recursive delegate of scanMNIST for building a list of data packets.
+scanMNIST' :: (Eq t, Num t) => (BStr, BStr) -> t -> [StrPkt] -> IO [StrPkt]
 scanMNIST' _ 0 data_set = return data_set
 scanMNIST' (img, lab) size data_set = do
   -- Generate random index for data sample.
@@ -131,3 +144,14 @@ scanMNIST' (img, lab) size data_set = do
   let pkt = packet img lab rand_idx
   -- Add data packet to list, continue building.
   scanMNIST' (img, lab) (size-1) (data_set ++ [pkt])
+
+
+{- Generally useful formatting functions -}
+
+-- Convert a string of binary digits into a list of bits (Float).
+bitVec :: String -> [Float]
+bitVec bitmap = map (\wrd -> read [wrd] :: Float) bitmap
+
+-- Convert a list of strings of binary digits into a list of lists bits (Float).
+bitVec_fromMtx :: [String] -> [[Float]]
+bitVec_fromMtx bitmap = map (\x -> map ( \y -> (read y :: Float) ) (words x)) ( bitmap)
