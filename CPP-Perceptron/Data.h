@@ -17,7 +17,7 @@
 #define DATA_GEN_H
 
 #ifndef nullptr
-#define nullptr
+#define nullptr NULL
 #endif // nullptr
 
 class Data
