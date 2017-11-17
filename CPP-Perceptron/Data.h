@@ -16,6 +16,10 @@
 #ifndef DATA_GEN_H
 #define DATA_GEN_H
 
+#ifndef nullptr
+#define nullptr
+#endif // nullptr
+
 class Data
 {
   public: 
