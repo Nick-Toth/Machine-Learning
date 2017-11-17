@@ -16,7 +16,7 @@ import TrainingData -- Training data generation
 
 
 -- The number of packets in each training data bundle.
-packets = 150 :: Int
+packets = 500 :: Int
 -- For the random data generator.
 seed = 0 :: Int
 
@@ -25,7 +25,7 @@ main :: IO ()
 main = do
   --test_gen -- Simulate perceptron with binary input data.
   test_mnist -- Simulate perceptron with mnist data.
-  putStrLn "\n\n  Goodbye!\n"
+  putStrLn "\n  Goodbye!\n"
 
 --(foldl (+) 0 (zipWith (*) [0.0,1.0] [3.2759907e-3,2.4698852e-3])) - threshold
 {- Simulate perceptron on random binary data
@@ -63,19 +63,19 @@ test_gen = do
   printBinData raw_data
 
   -- Print general metadata about the perceptron's training
-  putStrLn $ "\n  Perceptron trained with:\n"
-          ++ "\n    Training-data packets: " ++ show packs
+  putStrLn $ "\n  Perceptron Trained With:\n"
+          ++ "\n    Training-Data Packets: " ++ show packs
           ++ "\n    Epochs:                " ++ show epochs
           ++ "\n    Final Weights:         " ++ show fnl_wts
           -- ++ "\n    Final Weights: " ++ show weights
-          ++ "\n    Learning rate:         " ++ show l_rate
+          ++ "\n    Learning Rate:         " ++ show l_rate
           ++ "\n    Threshold:             " ++ show threshold
           -- Separate metadata and test data.
           ++ "\n\n    " ++ take 35 (cycle "-")
-          ++ "\n\n  Post-Training test:\n"
-          ++ "\n    Complete input set: " ++ show test_set
-          ++ "\n    Correct outputs:    " ++ "[0,0,1,1]"
-          ++ "\n    Perceptron outputs: " ++ show tst_out
+          ++ "\n\n  Post-Training Test:\n"
+          ++ "\n    Complete Input Set: " ++ show test_set
+          ++ "\n    Correct Outputs:    " ++ "[0,0,1,1]"
+          ++ "\n    Perceptron Outputs: " ++ show tst_out
 
 
 {- Simulate perceptron algorithm for classifying
@@ -116,16 +116,16 @@ test_mnist = do
       pcep_test = binCond (>= 0) (foldl (+) 0 (zipWith (*) tst_inp fnl_wts) - threshold)
 
   -- Print general metadata about training
-  putStrLn $ "\n  Perceptrons (10) trained with: \n"
-          ++ "\n    Training-data packets: " ++ show packets
+  putStrLn $ "\n  Perceptrons (10) Trained With: \n"
+          ++ "\n    Training-Data Packets: " ++ show packets
           ++ "\n    Epochs:                " ++ show (map snd output)
-          ++ "\n    Learning rate:         " ++ show l_rate
+          ++ "\n    Learning Rate:         " ++ show l_rate
           ++ "\n    Threshold:             " ++ show threshold
           ++ "\n\n  " ++ take 35 (cycle "-")
-          ++ "\n\n  Post-Training test:\n"
-          ++ "\n    Test data label: " ++ show tst_lab
-          ++ "\n    Correct outputs: " ++ show (outputVec tst_lab)
-          ++ "\n    Test outputs:    " ++ show (outputVec pcep_test)
+          ++ "\n\n  Post-Training Test:\n"
+          ++ "\n    Test Data Label: " ++ show tst_lab
+          ++ "\n    Correct Outputs: " ++ show (outputVec tst_lab)
+          ++ "\n    Test Outputs:    " ++ show (outputVec pcep_test)
 
 
 -- A conditional function which returns 1 for true, 0 for false.
