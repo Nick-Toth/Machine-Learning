@@ -1,8 +1,6 @@
 # A simple feed forward neural network. <img align="right" src="https://s11.postimg.org/wxur5xoj7/pynet.png">
 
-This program was written as part of a school assignment.
-It's not too exciting, but it may serve as a nice reference
-point for understanding/implementing neural networks.
+This basic network was produced as part of a technical writing writing assignment.
 
 ## Example output
 
